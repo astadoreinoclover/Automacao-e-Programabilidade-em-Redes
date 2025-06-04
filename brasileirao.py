@@ -5,8 +5,12 @@ import re
 import time
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import NoSuchElementException
+import os
+import sys
 
-# Inicializa o navegador
+sys.stderr = open(os.devnull, 'w')
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+
 def iniciar_navegador():
     options = Options()
     options.add_argument("--disable-blink-features=AutomationControlled")
@@ -16,18 +20,16 @@ def iniciar_navegador():
     navegador.get('https://google.com.br')
     return navegador
 
-# Pesquisa e acessa a página da tabela
 def abrir_tabela_brasileirao(navegador):
     barra_pesquisa = navegador.find_element(By.NAME, 'q')
     barra_pesquisa.send_keys('Campeonato brasileiro 2025')
     barra_pesquisa.send_keys(Keys.ENTER)
-    time.sleep(2)  # espera carregar resultados
+    time.sleep(2)
 
     link = navegador.find_element(By.PARTIAL_LINK_TEXT, "Tabela e Jogos do Brasileirão Série A 2025")
     link.click()
-    time.sleep(2)  # espera carregar a página da tabela
+    time.sleep(2)
 
-# Extrai tabela de classificação
 def extrair_tabela(navegador):
     linhasEstatisticas = navegador.find_elements(By.CSS_SELECTOR, ".tabela__pontos tbody tr")
     clubes = navegador.find_elements(By.CSS_SELECTOR, ".classificacao__equipes--nome")
@@ -54,7 +56,6 @@ def extrair_tabela(navegador):
         print("Erro: número de clubes e estatísticas não corresponde.")
     return tabela_classificacao
 
-# Exibe a tabela formatada
 def mostrar_tabela(tabela_classificacao):
     cabecalho = f"{'Clube':<25} {'P':>3} {'J':>3} {'V':>3} {'E':>3} {'D':>3} {'GP':>4} {'GC':>4} {'SG':>4} {'AP':>5}"
     print(cabecalho)
@@ -72,7 +73,6 @@ def mostrar_tabela(tabela_classificacao):
               f"{estatisticas['saldo_de_gols']:>4} "
               f"{estatisticas['aproveitamento']:>4}%")
 
-# Exibe estatísticas de um time selecionado
 def estatisticas_time(tabela_classificacao):
     print("Times disponíveis:\n")
     for i, clube in enumerate(tabela_classificacao.keys(), start=1):
@@ -99,8 +99,10 @@ def estatisticas_time(tabela_classificacao):
     except ValueError:
         print("Entrada inválida. Digite um número.")
 
-# Lista jogos da rodada
 def listar_jogos(navegador, tabela_classificacao):
+    import re
+    from selenium.webdriver.common.by import By
+
     jogos = navegador.find_elements(By.CSS_SELECTOR, ".lista-jogos__jogo")
     jogos_disponiveis = []
 
@@ -109,15 +111,31 @@ def listar_jogos(navegador, tabela_classificacao):
         linhas = [linha for linha in linhas if linha.strip() and "FIQUE POR DENTRO" not in linha]
 
         if len(linhas) >= 3:
-            linha0 = linhas[0]
-            padrao = re.compile(r"(.*?)(\d{2}/\d{2})([A-Za-zÀ-ÿ]+)?(\d{2}:\d{2})")
-            m = padrao.match(linha0)
+            linha0 = linhas[0].strip()
 
-            if m:
-                local = m.group(1).strip()
-                data = m.group(2)
-                dia = m.group(3) if m.group(3) else ""
-                hora = m.group(4)
+            # Normaliza caso esteja tudo grudado (ex: "Hoje20:00" ou "24/0520:00")
+            linha0 = re.sub(r"(Hoje)(\d{2}:\d{2})", r"\1 \2", linha0)
+            linha0 = re.sub(r"(\d{2}/\d{2})(\d{2}:\d{2})", r"\1 \2", linha0)
+
+            # Padrões para data/hora
+            padrao1 = re.compile(r"^(.*?)(\d{2}/\d{2})\s*([A-Za-zÀ-ÿ]+)?\s*(\d{2}:\d{2})$")
+            padrao2 = re.compile(r"^(.*?)\s+(Hoje|[A-Za-zÀ-ÿ]+)?\s*•?\s*(\d{2}:\d{2})$")
+
+            m = padrao1.match(linha0)
+            n = padrao2.match(linha0)
+
+            if m or n:
+                if m:
+                    local = m.group(1).strip()
+                    data = m.group(2)
+                    dia = m.group(3) if m.group(3) else ""
+                    hora = m.group(4)
+                elif n:
+                    local = n.group(1).strip()
+                    local = local[:-4]
+                    data = "Hoje"
+                    dia = n.group(2) if n.group(2) else ""
+                    hora = n.group(3)
 
                 if len(linhas) == 3:
                     time_casa = linhas[1]
@@ -144,13 +162,14 @@ def listar_jogos(navegador, tabela_classificacao):
                 })
 
                 texto_extra = f" - Placar: {placar}" if placar else ""
-                print(f"{idx + 1}. {time_casa} x {time_visitante} - {data} {hora} ({local}){texto_extra}")
+                print(f"{idx + 1}. {time_casa} x {time_visitante} - {data or dia} {hora} ({local}){texto_extra}")
             else:
                 print(f"{idx + 1}. Erro ao ler local/data/hora: {linha0}")
         else:
             print(f"{idx + 1}. Formato inesperado:", linhas)
 
-# Menu principal
+    return jogos_disponiveis
+
 def exibir_menu():
     print("\n======= MENU PRINCIPAL =======")
     print("1 - Mostrar tabela")
