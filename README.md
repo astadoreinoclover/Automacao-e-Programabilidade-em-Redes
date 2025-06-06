@@ -123,6 +123,5 @@ Apresenta o **menu principal** ao usuário com as opções:
 - Adicionar exportação da tabela em CSV.
 - Criar interface gráfica (GUI).
 - Permitir busca por nome do time diretamente.
-- Tornar o scraper mais robusto com melhor tratamento de erros.
 
 ---
