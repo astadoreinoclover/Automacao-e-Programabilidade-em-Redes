@@ -11,14 +11,27 @@ import sys
 sys.stderr = open(os.devnull, 'w')
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
+# Oculto
 def iniciar_navegador():
     options = Options()
     options.add_argument("--disable-blink-features=AutomationControlled")
     options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
+    options.add_argument("--headless")  # modo oculto
+    options.add_argument("--window-size=1920,1080")  # simula tela maximizada
+
     navegador = webdriver.Chrome(options=options)
-    navegador.maximize_window()
     navegador.get('https://google.com.br')
     return navegador
+
+# Vizivel
+# def iniciar_navegador():
+#     options = Options()
+#     options.add_argument("--disable-blink-features=AutomationControlled")
+#     options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
+#     navegador = webdriver.Chrome(options=options)
+#     navegador.maximize_window()
+#     navegador.get('https://google.com.br')
+#     return navegador
 
 def abrir_tabela_brasileirao(navegador):
     barra_pesquisa = navegador.find_element(By.NAME, 'q')
@@ -170,12 +183,23 @@ def listar_jogos(navegador, tabela_classificacao):
 
     return jogos_disponiveis
 
+def getGoleadores(navegador):
+    goleadores = navegador.find_elements(By.CSS_SELECTOR, ".ranking-item-wrapper")
+    for i, goleador in enumerate(goleadores[:10], start=1):
+        nome = goleador.find_element(By.CSS_SELECTOR, ".jogador-nome")
+        gols = goleador.find_element(By.CSS_SELECTOR, ".jogador-gols")
+        posicao = goleador.find_element(By.CSS_SELECTOR, ".jogador-posicao")
+        imagem = goleador.find_element(By.CSS_SELECTOR, ".jogador-escudo img")
+        time = imagem.get_attribute("alt")
+        print(f"{i}. {nome.text} {posicao.text} com {gols.text} gols - {time}")
+
 def exibir_menu():
     print("\n======= MENU PRINCIPAL =======")
     print("1 - Mostrar tabela")
     print("2 - Estatísticas do time")
     print("3 - Jogos da rodada")
-    print("4 - Sair")
+    print("4 - Artilheiros")
+    print("5 - Sair")
 
 def main():
     navegador = iniciar_navegador()
@@ -193,6 +217,8 @@ def main():
         elif opcao == '3':
             listar_jogos(navegador, tabela_classificacao)
         elif opcao == '4':
+            getGoleadores(navegador)
+        elif opcao == '5':
             print("Saindo do programa...")
             navegador.quit()
             break
