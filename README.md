@@ -1,3 +1,5 @@
+### Renato Cardozo e Victor Xavier
+
 # 🏆 Sistema de Monitoramento do Campeonato Brasileiro (Série A) - 2025
 
 Este projeto é um **sistema interativo em Python** que utiliza **Selenium** para automatizar a navegação e coleta de informações em tempo real sobre o Campeonato Brasileiro Série A. Ele permite ao usuário visualizar a tabela de classificação, consultar estatísticas específicas de um time e listar os jogos da rodada atual, tudo diretamente no terminal.
@@ -116,6 +118,35 @@ Apresenta o **menu principal** ao usuário com as opções:
 - A execução pode demorar alguns segundos devido ao uso de `time.sleep()` para garantir que os elementos sejam carregados.
 
 ---
+
+## 🕒 Estatísticas de tempo
+
+A métrica de tempo é feita por cada consulta que o script permite.
+
+ - Tempo de execução de script: Até 5s
+ - Tempo de execução de manual: Até 60s
+
+ - Tempo de diferença: até 55s
+
+Levando em consideração uma média de 8 pesquisas por dia.
+
+ - 8 * 55 = 440s
+
+Levando em consideração 1 ano de 365 dias.
+
+ - 440 * 365 = 160.600s
+
+Levando em consideração 8 funcionários.
+
+ - 160600 * 8 = 1.284.800s
+
+Transformando em horas trabalhadas:
+
+ - 1.284.800s = 356h +
+
+Levando em consideração uma média de 27 reais por hora:
+
+ - Gera uma economia de R$ 9.612
 
 ## 🧼 Futuras Melhorias
 
