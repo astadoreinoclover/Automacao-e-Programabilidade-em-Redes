@@ -103,7 +103,7 @@ Apresenta o **menu principal** ao usuário com as opções:
 1. Clone ou baixe este repositório.
 2. Execute o script com:
    ```bash
-   python nome_do_arquivo.py
+   python brasileirao.py
    ```
 3. Navegue pelo menu interativo no terminal.
 
