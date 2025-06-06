@@ -65,6 +65,13 @@ Coleta e exibe os **jogos da rodada**, incluindo:
 - Data e hora
 - Placar (caso disponível)
 
+### `getGoleadores(navegador)`
+Coleta e exibe os 10 maiores **artilheiros**, incluindo:
+- Nome do jogador
+- Número de gols
+- Time
+- Posição
+
 ### `exibir_menu()` e `main()`
 Apresenta o **menu principal** ao usuário com as opções:
 - Mostrar Tabela
