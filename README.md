@@ -148,6 +148,41 @@ Levando em consideração uma média de 27 reais por hora:
 
  - Gera uma economia de R$ 9.612
 
+## 🌐 Comunicação Cliente-Servidor com Socket
+**O sistema possui uma arquitetura cliente-servidor baseada em sockets TCP, permitindo que o menu seja acessado remotamente via terminal.**
+
+**🔄 Como funciona:**
+O servidor é responsável por inicializar o navegador, coletar os dados do campeonato via Selenium e responder às requisições dos clientes.
+O cliente conecta-se ao servidor e interage com o menu pelo terminal.
+A comunicação ocorre em tempo real, com envio e recebimento de mensagens codificadas em UTF-8.
+
+## 🔐 Variáveis de Ambiente
+**Para facilitar a configuração, os dados de rede são armazenados no arquivo .env:**
+
+**📄 Arquivo .env**
+Crie um arquivo chamado .env com as seguintes variáveis:
+ ```bash
+   HOST=192.168.8.106
+   PORT=8025
+ ```
+Essas variáveis são carregadas no código usando a biblioteca python-dotenv.
+
+Instalação:
+
+```bash
+   pip install python-dotenv
+```
+
+## 📁 Estrutura do Projeto
+```bash
+📁 Automacao-e-Programabilidade-em-Redes/
+├── servidor.py               # Código principal do servidor
+├── cliente.py                # Código cliente com menu interativo
+├── .env                      # Configuração de IP e porta
+├── .gitignore                # Ignora o .env e outros arquivos desnecessários
+└── README.md                 # Documentação do projeto
+```
+
 ## 🧼 Futuras Melhorias
 
 - Substituir `sleep()` por `WebDriverWait` para aguardar elementos dinamicamente.
