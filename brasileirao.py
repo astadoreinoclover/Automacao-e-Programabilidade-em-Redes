@@ -12,26 +12,26 @@ sys.stderr = open(os.devnull, 'w')
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 # Oculto
-def iniciar_navegador():
-    options = Options()
-    options.add_argument("--disable-blink-features=AutomationControlled")
-    options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
-    options.add_argument("--headless")  # modo oculto
-    options.add_argument("--window-size=1920,1080")  # simula tela maximizada
-
-    navegador = webdriver.Chrome(options=options)
-    navegador.get('https://google.com.br')
-    return navegador
-
-# Vizivel
 # def iniciar_navegador():
 #     options = Options()
 #     options.add_argument("--disable-blink-features=AutomationControlled")
 #     options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
+#     options.add_argument("--headless")  # modo oculto
+#     options.add_argument("--window-size=1920,1080")  # simula tela maximizada
+
 #     navegador = webdriver.Chrome(options=options)
-#     navegador.maximize_window()
 #     navegador.get('https://google.com.br')
-#     return navegador
+    # return navegador
+
+# Vizivel
+def iniciar_navegador():
+    options = Options()
+    options.add_argument("--disable-blink-features=AutomationControlled")
+    options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
+    navegador = webdriver.Chrome(options=options)
+    navegador.maximize_window()
+    navegador.get('https://google.com.br')
+    return navegador
 
 def abrir_tabela_brasileirao(navegador):
     barra_pesquisa = navegador.find_element(By.NAME, 'q')
