@@ -1,3 +1,5 @@
+### Renato Cardozo e Victor Xavier
+
 # 🏆 Sistema de Monitoramento do Campeonato Brasileiro (Série A) - 2025
 
 Este projeto é um **sistema interativo em Python** que utiliza **Selenium** para automatizar a navegação e coleta de informações em tempo real sobre o Campeonato Brasileiro Série A. Ele permite ao usuário visualizar a tabela de classificação, consultar estatísticas específicas de um time e listar os jogos da rodada atual, tudo diretamente no terminal.
@@ -65,6 +67,13 @@ Coleta e exibe os **jogos da rodada**, incluindo:
 - Data e hora
 - Placar (caso disponível)
 
+### `getGoleadores(navegador)`
+Coleta e exibe os 10 maiores **artilheiros**, incluindo:
+- Nome do jogador
+- Número de gols
+- Time
+- Posição
+
 ### `exibir_menu()` e `main()`
 Apresenta o **menu principal** ao usuário com as opções:
 - Mostrar Tabela
@@ -96,7 +105,7 @@ Apresenta o **menu principal** ao usuário com as opções:
 1. Clone ou baixe este repositório.
 2. Execute o script com:
    ```bash
-   python nome_do_arquivo.py
+   python brasileirao.py
    ```
 3. Navegue pelo menu interativo no terminal.
 
@@ -110,12 +119,40 @@ Apresenta o **menu principal** ao usuário com as opções:
 
 ---
 
+## 🕒 Estatísticas de tempo
+
+A métrica de tempo é feita por cada consulta que o script permite.
+
+ - Tempo de execução de script: Até 5s
+ - Tempo de execução de manual: Até 60s
+
+ - Tempo de diferença: até 55s
+
+Levando em consideração uma média de 8 pesquisas por dia.
+
+ - 8 * 55 = 440s
+
+Levando em consideração 1 ano de 365 dias.
+
+ - 440 * 365 = 160.600s
+
+Levando em consideração 8 funcionários.
+
+ - 160600 * 8 = 1.284.800s
+
+Transformando em horas trabalhadas:
+
+ - 1.284.800s = 356h +
+
+Levando em consideração uma média de 27 reais por hora:
+
+ - Gera uma economia de R$ 9.612
+
 ## 🧼 Futuras Melhorias
 
 - Substituir `sleep()` por `WebDriverWait` para aguardar elementos dinamicamente.
 - Adicionar exportação da tabela em CSV.
 - Criar interface gráfica (GUI).
 - Permitir busca por nome do time diretamente.
-- Tornar o scraper mais robusto com melhor tratamento de erros.
 
 ---
