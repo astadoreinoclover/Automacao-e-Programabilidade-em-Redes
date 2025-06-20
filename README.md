@@ -162,8 +162,8 @@ A comunicação ocorre em tempo real, com envio e recebimento de mensagens codif
 **📄 Arquivo .env**
 Crie um arquivo chamado .env com as seguintes variáveis:
  ```bash
-   HOST=192.168.8.106
-   PORT=8025
+   HOST='Seu ip'
+   PORT='Sua porta'
  ```
 Essas variáveis são carregadas no código usando a biblioteca python-dotenv.
 
