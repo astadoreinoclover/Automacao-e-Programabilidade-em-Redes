@@ -8,6 +8,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 from dotenv import load_dotenv
+import unicodedata
 
 load_dotenv()
 HOST = os.getenv("HOST")
@@ -38,6 +39,16 @@ def iniciar_navegador():
 #     navegador.maximize_window()
 #     navegador.get('https://google.com.br')
 #     return navegador
+
+
+def limpar_texto_para_telnet(texto):
+    texto_sem_acentos = unicodedata.normalize('NFKD', texto).encode('ASCII', 'ignore').decode('ASCII')
+
+    texto_limpo = re.sub(r'\n+', '\n', texto_sem_acentos)
+
+    texto_limpo = re.sub(r'[^\x20-\x7E\n]', '', texto_limpo)
+
+    return texto_limpo.strip()
 
 def abrir_tabela_brasileirao(navegador):
     barra_pesquisa = navegador.find_element(By.NAME, 'q')
@@ -164,7 +175,7 @@ def main():
 
     cliente, _ = servidor.accept()
 
-    menu = """\n======= MENU BRASILEIRÃO =======
+    menu = """======= MENU BRASILEIRÃO =======
 1 - Mostrar tabela
 2 - Estatísticas do time
 3 - Jogos da rodada
@@ -173,38 +184,37 @@ def main():
 Digite sua opção: """
 
     while True:
-        cliente.sendall(menu.encode())
+        cliente.sendall(limpar_texto_para_telnet(menu).replace('\n', '\r\n').encode())
         opcao = cliente.recv(2048).decode().strip()
 
         if opcao == '1':
-            cliente.sendall((mostrar_tabela(tabela) + "\n").encode())
+            cliente.sendall(limpar_texto_para_telnet((mostrar_tabela(tabela))).replace('\n', '\r\n').encode())
 
         elif opcao == '2':
             nomes_times = list(tabela.keys())
             lista_times = "\n".join([f"{i+1}. {nome}" for i, nome in enumerate(nomes_times)])
-            cliente.sendall(f"Times disponíveis:\n{lista_times}\nDigite o número do time:\n".encode())
-
+            cliente.sendall(limpar_texto_para_telnet(f"Times disponíveis:\n{lista_times}\nDigite o número do time:").replace('\n', '\r\n').encode())
             try:
                 indice = int(cliente.recv(1024).decode().strip()) - 1
                 if 0 <= indice < len(nomes_times):
                     nome = nomes_times[indice]
-                    cliente.sendall(estatisticas_time(tabela, nome).encode())
+                    cliente.sendall(limpar_texto_para_telnet(estatisticas_time(tabela, nome)).replace('\n', '\r\n').encode())
                 else:
-                    cliente.sendall("Número inválido. Tente novamente.\n".encode())
+                    cliente.sendall(limpar_texto_para_telnet("Número inválido. Tente novamente.").replace('\n', '\r\n').encode())
             except ValueError:
-                cliente.sendall("Entrada inválida. Digite apenas o número do time.\n".encode())
+                cliente.sendall(limpar_texto_para_telnet("Entrada inválida. Digite apenas o número do time.").replace('\n', '\r\n').encode())
         elif opcao == '3':
-            cliente.sendall((listar_jogos(navegador, tabela) + "\n").encode())
+            cliente.sendall(limpar_texto_para_telnet((listar_jogos(navegador, tabela))).replace('\n', '\r\n').encode())
 
         elif opcao == '4':
-            cliente.sendall((getGoleadores(navegador) + "\n").encode())
+            cliente.sendall(limpar_texto_para_telnet((getGoleadores(navegador))).replace('\n', '\r\n').encode())
 
         elif opcao == '5':
-            cliente.sendall("Encerrando conexão. Até logo!\n".encode())
+            cliente.sendall(limpar_texto_para_telnet("Encerrando conexão. Até logo!").replace('\n', '\r\n').encode())
             break
 
         else:
-            cliente.sendall("Opção inválida. Tente novamente.\n".encode())
+            cliente.sendall(limpar_texto_para_telnet("Opção inválida. Tente novamente.").replace('\n', '\r\n').encode())
 
     cliente.close()
     servidor.close()
