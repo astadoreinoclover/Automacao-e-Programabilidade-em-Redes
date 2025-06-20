@@ -182,6 +182,19 @@ Instalação:
 ├── .gitignore                # Ignora o .env e outros arquivos desnecessários
 └── README.md                 # Documentação do projeto
 ```
+## Rodar o servidor
+```bash
+python servidor.py
+```
+
+## Rodar o cliente
+```bash
+python cliente.py
+```
+ou se prefirir
+```bash
+telnet 'ip' 'porta'
+```
 
 ## 🧼 Futuras Melhorias
 
